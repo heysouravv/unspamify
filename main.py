@@ -66,7 +66,7 @@ async def logout(request: Request):
 @app.get("/oauth2/login")
 async def login():
     # Redirect the user to Google's OAuth 2.0 authorization page
-    flow.redirect_uri = 'http://localhost:8000/callback'
+    flow.redirect_uri = 'https://app.unspamify.com/'
     flow.include_granted_scopes = 'true'
     flow.prompt = 'consent'
     authorization_url, state = flow.authorization_url(access_type='offline')
