@@ -15,7 +15,8 @@
         <div class="columns is-multiline">
           <div class="column is-8 is-offset-2 register">
             <div class="columns">
-              <div class="column right has-text-centered">
+              <div class="column right has-text-left">
+                <button id="logoutBtn" class="button is-danger is-pulled-right">Logout</button>
                 <h1 class="title is-4">Email Dashboard</h1>
                 <p class="description">Track your email processing here</p>
                 <div class="columns is-multiline">
@@ -56,6 +57,21 @@
         </div>
       </section>
   </body>
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      // Call the FastAPI logout endpoint
+      fetch('/logout', {
+        method: 'GET',
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.message === 'Logged out') {
+          // Reload the page after successful logout
+          location.reload();
+        }
+      });
+    });
+  </script>
   <style>
     p.subtitle {
         font-size: 24px;
