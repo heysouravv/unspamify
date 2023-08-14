@@ -1,0 +1,13 @@
+INFO:     Started server process [21822]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     49.37.114.123:0 - "GET / HTTP/1.0" 200 OK
+INFO:     49.37.114.123:0 - "GET /oauth2/login HTTP/1.0" 307 Temporary Redirect
+Refresh Token None
+INFO:     49.37.114.123:0 - "GET /callback?state=QJGzCzdF9LA8Nb3xDsnK9t216A7uXS&code=4%2F0Adeu5BXZuFBt5cXlxutl4UmfQr4yZxGL0aHDX28FX3wvKywFrM9zYiHy8EipYLWWs_hueA&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fgmail.readonly HTTP/1.0" 307 Temporary Redirect
+INFO:     49.37.114.123:0 - "GET /thank-you HTTP/1.0" 200 OK
+INFO:     49.37.114.123:0 - "GET /css/register.css HTTP/1.0" 404 Not Found
+INFO:     49.37.114.123:0 - "GET / HTTP/1.0" 200 OK
+INFO:     49.37.114.123:0 - "GET /css/register.css HTTP/1.0" 404 Not Found
+INFO:     65.154.226.169:0 - "GET / HTTP/1.0" 200 OK
