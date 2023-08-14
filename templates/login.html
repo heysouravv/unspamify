@@ -21,8 +21,8 @@
               <h2 class="subtitle colored is-4">Lorem ipsum dolor sit amet.</h2>
               <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corporis ex deleniti aliquam tempora libero excepturi vero soluta odio optio sed.</p>
             </div> -->
-            <div class="column right has-text-centered">
-              <h1 class="title is-4">Sign up today</h1>
+            <div class="column right has-text-left">
+              <h1 class="title is-4">Login \ Sign up</h1>
               <p class="description">Lorem ipsum dolor, sit amet consectetur adipisicing elit</p>
                 <button id="google" class="button is-block is-fullwidth is-medium">
                     <span class="icon">
@@ -39,8 +39,36 @@
                         </a>
                     </span>
                 </button>
+                <div id="modal-js-example" class="modal">
+                  <div class="modal-background"></div>
+                  <div class="modal-content">
+                    <div class="box">
+                      <h2 class="title is-4">Why does Unspamify need access to my email?</h2>
+                      <p class="description has-text-black">Unspamify is committed to helping busy individuals safeguard their email addresses from unwanted appearances on B2B databases. Here's how our process is designed to serve you:</p>
+                      <div class="content">
+                        <ul>
+                          <li>
+                            <strong>Opt-Out Requests:</strong> Once you sign up with Unspamify, we proactively submit opt-out forms on your behalf to various data vendors such as Apollo, Zoominfo, and others. The goal is to ensure your email address is removed from these databases, thereby safeguarding your personal data from potential misuse.
+                          </li>
+                          <li>
+                            <strong>Verification Process:</strong> After we've initiated the opt-out request, many data vendors send a verification email to the user's address to confirm the removal request. This step is where our email access becomes essential.
+                          </li>
+                          <li>
+                            <strong>Domain-Specific Access:</strong> Our technology is tailored to scan only for specific verification emails from B2B databases. We only have visibility on emails coming from domains that are listed on <a href="https://unspamify.com/list">unspamify.com</a>. All other emails remain entirely private and beyond our access.
+                          </li>
+                          <li>
+                            <strong>Automatic Verification:</strong> Once we detect these specific verification emails, our non-invasive technology takes over to automatically complete the verification process on your behalf. This ensures your email address is removed efficiently without requiring manual intervention from you.
+                          </li>
+                        </ul>
+                        <p>Rest assured, your trust and privacy are paramount to us. While we request this specific access to ensure swift verification, your other email content remains untouched, unseen, and unequivocally yours.</p>
+                      </div>
+                    </div>
+                  </div>
+                
+                  <button class="modal-close is-large" aria-label="close"></button>
+                </div>
                 <br />
-                <small><em>Lorem ipsum dolor sit amet consectetur.</em></small>
+                <a class="js-modal-trigger description is-size-6" data-target="modal-js-example"><u>Why do you need my email?</u></a>
             </div>
           </div>
         </div>
@@ -81,6 +109,48 @@
     googleButton.addEventListener('click', () => {
       window.location.href = '/oauth2/login';
     })
+    document.addEventListener('DOMContentLoaded', () => {
+    // Functions to open and close a modal
+    function openModal($el) {
+      $el.classList.add('is-active');
+    }
+
+    function closeModal($el) {
+      $el.classList.remove('is-active');
+    }
+
+    function closeAllModals() {
+      (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+        closeModal($modal);
+      });
+    }
+
+    // Add a click event on buttons to open a specific modal
+    (document.querySelectorAll('.js-modal-trigger') || []).forEach(($trigger) => {
+      const modal = $trigger.dataset.target;
+      const $target = document.getElementById(modal);
+
+      $trigger.addEventListener('click', () => {
+        openModal($target);
+      });
+    });
+
+    // Add a click event on various child elements to close the parent modal
+    (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+      const $target = $close.closest('.modal');
+
+      $close.addEventListener('click', () => {
+        closeModal($target);
+      });
+    });
+
+    // Add a keyboard event to close all modals
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Escape') {
+        closeAllModals();
+      }
+    });
+  });
   </script>
   <style>
     :root {
