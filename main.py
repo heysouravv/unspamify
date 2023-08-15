@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import msal
 import requests
+from dynomodb import init_user
 
 CLIENT_ID = '5df87552-f119-4d3a-ac0f-e70bcb829e7d'
 CLIENT_SECRET = '878e1418-0301-4875-8ec0-b497347835ab'
@@ -27,7 +28,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="oauth2/token")
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
 # Load the OAuth 2.0 client configuration from the credentials file
-flow = InstalledAppFlow.from_client_secrets_file('secret.json', scopes=SCOPES)
+flow = InstalledAppFlow.from_client_secrets_file('/Users/apple/Desktop/SouravPersonal/LIstEmails/repo/docker/secret.json', scopes=SCOPES)
 
 def get_user_credentials(request: Request):
     try:
@@ -53,36 +54,40 @@ def get_user_credentials(request: Request):
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     session = request.session
-    if 'access_token' in session:
+    if 'user_registered' in session:
         return templates.TemplateResponse("dashboard.html", {"request": request})
     else:
         return templates.TemplateResponse("login.html", {"request": request})
     
 @app.get("/logout")
 async def logout(request: Request):
-    request.session.pop("access_token", None)
+    request.session.pop("user_registered", None)
     return {"message": "Logged out"}
 
 @app.get("/oauth2/login")
 async def login():
     # Redirect the user to Google's OAuth 2.0 authorization page
-    flow.redirect_uri = 'https://app.unspamify.com/callback'
+    flow.redirect_uri = 'http://localhost:8000/callback'
     flow.include_granted_scopes = 'true'
     flow.prompt = 'consent'
     authorization_url, state = flow.authorization_url(access_type='offline')
     return Response(content="", status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": authorization_url})
 
 @app.get("/callback",response_class=HTMLResponse)
-async def callback(code: str, background_tasks: BackgroundTasks, request: Request):
+async def callback(code: str, background_tasks: BackgroundTasks, request: Request,response: Response):
+    response.set_cookie(key='user_registered', value='true', httponly=True)
     # Handle the OAuth 2.0 callback from Google
     flow.fetch_token(code=code)
     # Store only the access token in the session
     refresh_token = flow.credentials.refresh_token
     access_token = flow.credentials.token
     session = request.session
-    session["access_token"] = access_token
-    session["refresh_token"] = refresh_token
-    print("Refresh Token", refresh_token)
+    session["user_registered"] = True
+    service = build('gmail', 'v1', credentials=Credentials(token=access_token))
+    profile = service.users().getProfile(userId='me').execute()
+    user_email = profile['emailAddress']
+    if refresh_token is not None:
+        init_user(user_email=user_email, mailbox='gmail',refresh_token=refresh_token)
     return Response(content="", status_code=status.HTTP_307_TEMPORARY_REDIRECT, headers={"Location": "/thank-you"})
 
 @app.get("/login-with-microsoft/")
@@ -140,7 +145,6 @@ async def thank_you(request: Request):
 
 @app.get("/dashboard")
 async def dashboard(request: Request,credentials: Credentials = Depends(get_user_credentials)):
-    await get_emails(credentials)
     return templates.TemplateResponse("dashboard.html", {"request": request})
 
 @app.get("/emails", tags=["Emails"])
@@ -285,4 +289,4 @@ async def get_emails(credentials: Credentials = Depends(get_user_credentials)):
 # Add other endpoints as needed
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, port=8000)

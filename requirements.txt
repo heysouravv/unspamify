@@ -6,3 +6,6 @@ uvicorn[standard]
 itsdangerous
 starlette
 msal
+python-dotenv
+boto3
+uuid

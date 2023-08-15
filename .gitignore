@@ -2,3 +2,4 @@ secret.json
 refresh_token.txt
 /__pycache__
 *.zip
+.env

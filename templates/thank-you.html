@@ -26,7 +26,7 @@
                     </span>
                 </button>
                 <br />
-                <small><em>We hope you enjoy using our service!</em></small>
+                <small><em>We hope you enjoy using our service! Please wait while we redirect you to your dashboard</em></small>
             </div>
           </div>
         </div>
@@ -41,6 +41,11 @@
       </div>
     </section>
   </body>
+  <script>
+    setTimeout(function() {
+            window.location.href = "/";
+        }, 5000);
+  </script>
   <style>
     :root {
       --brandColor: hsl(166, 67%, 51%);
