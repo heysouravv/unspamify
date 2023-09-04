@@ -3,3 +3,5 @@ refresh_token.txt
 /__pycache__
 *.zip
 .env
+read.py
+test.py
